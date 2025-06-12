@@ -17,6 +17,23 @@
         height: 100%;
         width: 100%;
     }
+    .addRecordBtn {
+        position: absolute;
+        z-index: 10;
+        top: 10px;
+        right: 10px;
+        background-color: #ffffff;
+        color: rgb(62, 61, 61);
+        padding: 8px 16px;
+        border: none;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+}
+
+    .addRecordBtn:hover {
+        background-color: #ffffff;
+}
    </style>
    
 
@@ -28,8 +45,11 @@
    <script>
         require([ "esri/config","esri/Map",
          "esri/views/MapView", 
-         "esri/widgets/Locate" ], 
-         (esriConfig, Map, MapView, Locate) => {
+         "esri/widgets/Locate",
+         "esri/widgets/Search",
+         "esri/layers/FeatureLayer"
+        ], 
+         (esriConfig, Map, MapView, Locate, Search, FeatureLayer) => {
 
             //adding in API key
             esriConfig.apiKey= "AAPTxy8BH1VEsoebNVZXo8HurKfn8xs-sWsNswOMg-gicKExeOv8LqtW2-eXX8sChmQJp4x3jD2uBPHxjWmO3fI1MQBAVeBl6VrxvF186jjKmG_LWli4wZNwXUZORO17pGQ432BSycHoLd6yAMjl44SbH5qtpRSMS43nREA6-DFo9dMyy_DzxHf3sYdLtbNhLdppCmVwp9UZIU1M_c0_DFpQAWFVK3KWA6Z97IAm1mgtQ6S5dAkxc9iP5a1tZBiZY7vbAT1_gRtlmFxO";
@@ -41,23 +61,46 @@
             const view = new MapView ({
                 container: "viewDiv", //refrece to the DOM node that will contain the view
                 map: map,
-                center : [-74.0060, 40.7128], // new york city
+                center : [-74.0060, 40.7128], // NYC
                 zoom: 11
             });
 
+            // location widget
             const locateBtn =  new Locate ({
-        view: view
-        });
+                view : view
+            });
 
-        // add the locate widger to the left corner of view
-        view.ui.add(locateBtn, {
-            position: "top-left"
-        })
-         });
+        // add the locate widget to the left corner of view
+            view.ui.add(locateBtn, {
+                position: "top-left"
+                });
+            
+            // add a search widget 
+            const searchWidget = new Search ({
+                view : view
+            });
+
+        // add the search widget to the bottom of the view
+            view.ui.add(searchWidget,{
+                position: "bottom-left"
+            });
+
+            //create featurelayer from feature service
+            const layer = new FeatureLayer({
+                //url to the service
+                url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/survey123_c5d06768b1a844b3a9fdc1c460530d19_results/FeatureServer"
+            });
+
+            //add the layer to map
+            map.add(layer)
+
+        });
     </script>
 
   </head>
   <body>
+
+    <a href="https://arcg.is/01XDz"target="_blank" class="addRecordBtn">Add Record</a>
 
     <div id="viewDiv"></div>
    <!-- hello world text to check if everything worked -->
